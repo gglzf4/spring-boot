@@ -1,7 +1,6 @@
 package com.zrm.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -10,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import java.util.ArrayList;
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -25,6 +24,7 @@ public class WebAdapter extends WebMvcConfigurerAdapter {
     private String staticResourcePath = null;
 
     private HandlerInterceptor handlerInterceptor;
+
 
 
 
@@ -53,18 +53,19 @@ public class WebAdapter extends WebMvcConfigurerAdapter {
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        StringHttpMessageConverter converter = new StringHttpMessageConverter();
+        StringHttpMessageConverter converter = new StringHttpMessageConverter(Charset.forName("gbk"));
         converter.setWriteAcceptCharset(false);
-        List<MediaType> list = new ArrayList<MediaType>();
+
+        /*List<MediaType> list = new ArrayList<MediaType>();
         list.add(MediaType.APPLICATION_JSON);
-        converter.setSupportedMediaTypes(list);
-        converters.add(converter);
+        converter.setSupportedMediaTypes(list);*/
+        //converters.add(converter);
 
         MappingJackson2HttpMessageConverter jsonConvert = new MappingJackson2HttpMessageConverter();
-        jsonConvert.setSupportedMediaTypes(list);
+
         converters.add(jsonConvert);
 
-        super.configureMessageConverters(converters);
+        //super.configureMessageConverters(converters);
     }
 
 

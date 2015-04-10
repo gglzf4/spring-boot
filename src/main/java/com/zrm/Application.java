@@ -7,6 +7,7 @@ import com.zrm.config.WebAdapter;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
@@ -28,10 +29,17 @@ public class Application extends SpringBootServletInitializer {
         return application.sources(Application.class);
     }
 
-    @Bean
+    /*@Bean
     public WebMvcConfigurerAdapter getWebAdapter(){
         return new WebAdapter();
-    }
+    }*/
+
+    /*@Bean
+    public FilterRegistrationBean myFilter() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new MyFilter());
+        return registration;
+    }*/
 
 
 

@@ -1,4 +1,4 @@
-package com.zrm.config;
+package com.zrm.component;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
