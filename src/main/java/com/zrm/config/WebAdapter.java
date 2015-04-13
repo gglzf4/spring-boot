@@ -1,5 +1,6 @@
 package com.zrm.config;
 
+import com.zrm.component.interceptor.ProcessResponseInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -23,7 +24,7 @@ public class WebAdapter extends WebMvcConfigurerAdapter {
 
     private String staticResourcePath = null;
 
-    private HandlerInterceptor handlerInterceptor;
+    private HandlerInterceptor[] interceptors = {new ProcessResponseInterceptor()};
 
 
 
@@ -72,9 +73,13 @@ public class WebAdapter extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        if (handlerInterceptor != null) {
-            registry.addInterceptor(handlerInterceptor);
+        if (interceptors != null) {
+            for(HandlerInterceptor interceptor:interceptors){
+                registry.addInterceptor(interceptor);
+            }
         }
 
     }
+
+
 }
