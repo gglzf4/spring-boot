@@ -7,6 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.annotation.Annotation;
 
 /**
  * 处理返回数据拦截器。此拦截器的目的为将javabean序列化成json，然后返回给client端
@@ -22,19 +23,24 @@ public class ProcessResponseInterceptor extends AnnotationBasedInterceptor {
     public static final String INDEX_LOGIN_URL ="/index";
     public static final String ADMIN_LOGIN_URL ="/admin";
 
+
+    @Override
+    public void after(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) throws Exception {
+        super.after(request, response, modelAndView);
+    }
+
     @Override
     public boolean before(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        logger.info("----------------------------");
+        logger.info("-------------ProcessResponseInterceptor before 1---------------");
         return super.before(request, response, handler);
     }
 
     @Override
-    public void after(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) throws Exception {
-        logger.info("----------------------------");
-    }
-
-    @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        logger.info("-----responseInterceptor afterCompletion");
+        Object errorObj = request.getAttribute("error");
+
+        if(errorObj != null){
+            ResponseTools.push2client(response,errorObj);
+        }
     }
 }

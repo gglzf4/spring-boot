@@ -1,6 +1,7 @@
 package com.zrm.component.interceptor;
 
 import org.apache.log4j.Logger;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -11,9 +12,7 @@ import java.lang.annotation.Annotation;
 /**
  * 一个拦截器基类，用Annotation来控制拦截精度。
  * 暂时只能拦截到Handler一级，Handler的方法一级暂时拦截不到。
- * 注：由于com.dreampool.love.interceptors.BasicInterceptor有太多的无必要的Autowired依赖，
- * 所以不用它来做基类，而是直接继承HandlerInterceptorAdapter。
- * @author Zhang Tielei
+ * 直接继承HandlerInterceptorAdapter。
  *
  */
 public abstract class AnnotationBasedInterceptor extends HandlerInterceptorAdapter {
@@ -115,11 +114,14 @@ public abstract class AnnotationBasedInterceptor extends HandlerInterceptorAdapt
 		//先判断getInterceptorExclusionAnnotationClass，如果有这个标注，则不再匹配，而不管其它条件了
 		if (interceptorExclusionAnnotationClass != null) {
 			//如果在Handler类层次的标注上匹配到Annotation，则进行拦截
-			Annotation handlerAnnotation = handler.getClass().getAnnotation(interceptorExclusionAnnotationClass);
+			HandlerMethod handlerMethod = (HandlerMethod)handler;
+			Annotation methodAnnotation = handlerMethod.getMethodAnnotation(interceptorExclusionAnnotationClass);
+
+			Annotation handlerAnnotation = handlerMethod.getBeanType().getAnnotation(interceptorExclusionAnnotationClass);
 			if (logger.isInfoEnabled()) {
 				//logger.info("COMMON_INTERCEPTOR: shouldIntercept " + this.getClass().getCanonicalName() + " -- got handler exclusion annotation = " + handlerAnnotation + " for handler = " + handler + " for URL: " + request.getRequestURI());
 			}
-			if (handlerAnnotation != null) {
+			if (methodAnnotation != null || handlerAnnotation != null) {
 				return false;
 			}
 		}

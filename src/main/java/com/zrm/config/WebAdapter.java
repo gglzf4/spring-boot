@@ -1,6 +1,9 @@
 package com.zrm.config;
 
+import com.zrm.component.interceptor.AccessTokenInterceptor;
 import com.zrm.component.interceptor.ProcessResponseInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -11,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +28,10 @@ public class WebAdapter extends WebMvcConfigurerAdapter {
 
     private String staticResourcePath = null;
 
-    private HandlerInterceptor[] interceptors = {new ProcessResponseInterceptor()};
+    @Autowired
+    ProcessResponseInterceptor processResponseInterceptor;
+    @Autowired
+    AccessTokenInterceptor accessTokenInterceptor;
 
 
 
@@ -72,6 +79,9 @@ public class WebAdapter extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        List<HandlerInterceptor> interceptors = new ArrayList<HandlerInterceptor>();
+        interceptors.add(processResponseInterceptor);
+        interceptors.add(accessTokenInterceptor);
 
         if (interceptors != null) {
             for(HandlerInterceptor interceptor:interceptors){
